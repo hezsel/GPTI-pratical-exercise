@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
 
 jobs:
   ci:
@@ -35,7 +33,7 @@ jobs:
 
       - name: Cache node_modules 📦
         uses: actions/cache@v2.1.4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -47,4 +45,12 @@ jobs:
 
       - name: Run linter 👀
         run: yarn lint
+        
+      - name: Generate
+        run: yarn run generate
 
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
