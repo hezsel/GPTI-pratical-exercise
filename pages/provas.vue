@@ -45,6 +45,7 @@ import {
 export default {
   components: {
     exams: () => import('../components/exams.vue'),
+    themeConfig: () => import('../components/themeConfig.vue'),
   },
   data() {
     return {
@@ -60,7 +61,7 @@ export default {
           name: 'theme-config',
           label: 'Configuração de Temas',
           admin: true,
-          componentName: 'exams',
+          componentName: 'themeConfig',
         },
         {
           name: 'question-config',
@@ -95,10 +96,6 @@ export default {
     if (!this.isLoggedIn) {
       this.$router.push('/')
     }
-  },
-  mounted() {
-  },
-  methods: {
   },
 }
 </script>
