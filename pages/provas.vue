@@ -26,9 +26,9 @@
               :key="item.name"
             >
               <v-card flat>
-                <v-card-text>
-                  {{ text }}
-                </v-card-text>
+                <component
+                  :is="item.componentName"
+                />
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -43,6 +43,9 @@ import {
 } from 'vuex'
 
 export default {
+  components: {
+    exams: () => import('../components/exams.vue'),
+  },
   data() {
     return {
       tab: null,
@@ -51,24 +54,27 @@ export default {
           name: 'exams',
           label: 'Provas',
           admin: false,
+          componentName: 'exams',
         },
         {
           name: 'theme-config',
           label: 'Configuração de Temas',
           admin: true,
+          componentName: 'exams',
         },
         {
           name: 'question-config',
           label: 'Configuração de Questões',
           admin: true,
+          componentName: 'exams',
         },
         {
           name: 'exam-config',
           label: 'Configuração de Provas',
           admin: true,
+          componentName: 'exams',
         },
       ],
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     }
   },
   computed: {
