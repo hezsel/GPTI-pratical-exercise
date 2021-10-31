@@ -25,7 +25,7 @@ const defaultUsers = [
 
 export const state = () => ({
   registeredUsers: defaultUsers,
-  user: defaultUsers[0],
+  user: defaultUsers[1],
 })
 
 export const getters = {
@@ -57,4 +57,3 @@ export const actions = {
     commit('setUser', user)
   },
 }
-
