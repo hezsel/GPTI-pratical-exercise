@@ -6,24 +6,26 @@ import {
 } from 'ramda'
 import ERRORS from '../enum/errors'
 
-export const state = () => ({
-  user: {
-    name: 'teste'
+const defaultUsers = [
+  {
+    id: '1',
+    username: 'estudante',
+    password: 'password',
+    type: 'normal',
+    name: 'Estudante',
   },
-  registeredUsers: [
-    {
-      username: 'estudante',
-      password: 'password',
-      type: 'normal',
-      name: 'Estudante',
-    },
-    {
-      username: 'professor',
-      password: 'password',
-      type: 'admin',
-      name: 'Professor',
-    },
-  ],
+  {
+    id: '2',
+    username: 'professor',
+    password: 'password',
+    type: 'admin',
+    name: 'Professor',
+  },
+]
+
+export const state = () => ({
+  registeredUsers: defaultUsers,
+  user: defaultUsers[0],
 })
 
 export const getters = {
