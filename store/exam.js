@@ -28,7 +28,31 @@ const defaultExams = [
     endTime: '22:00',
     numberOfQuestions: 1,
     questions: [],
-    usersResponses: [{ userId: '1', questions: [{ question: { id: '', title: '' }, answer: 1}]}],
+    usersResponses: [
+      {
+        userId: '1',
+        questions: [
+          {
+            question: {
+              id: '2',
+              theme: '1',
+              weight: 1,
+              title: 'Com quantos paus se faz uma canoa',
+              options: [
+                'mais de 10',
+                '2',
+                '5.5',
+                'depende do tamanho dos paus',
+                'nenhum, você compra',
+              ],
+              answer: 3,
+              observation: 'Realmente depende mesmo',
+            },
+            answer: 3,
+          },
+        ],
+      }
+    ],
   },
   {
     id: '3',
