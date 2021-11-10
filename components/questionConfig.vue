@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="themes"
+    :items="questions"
     sort-by="calories"
     class="elevation-1"
   >
@@ -9,7 +9,7 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Temas</v-toolbar-title>
+        <v-toolbar-title>Questões</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -28,7 +28,7 @@
               v-bind="attrs"
               v-on="on"
             >
-              Novo Tema
+              Nova Questão
             </v-btn>
           </template>
           <v-card>
@@ -40,22 +40,84 @@
               <v-container>
                 <v-row>
                   <v-col
-                    cols="12"
-                    sm="12"
+                    cols="9"
+                    sm="9"
                   >
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Nome"
-                    ></v-text-field>
+                    <v-select
+                      v-model="editedItem.theme"
+                      :items="themes"
+                      item-text="name"
+                      item-value="id"
+                      label="Tema"
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="3"
+                    sm="3"
+                  >
+                    <v-select
+                      v-model="editedItem.weight"
+                      :items="weights"
+                      label="Peso"
+                    ></v-select>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="12"
                   >
                     <v-text-field
-                      v-model="editedItem.description"
-                      label="Descrição"
+                      v-model="editedItem.title"
+                      label="Questão"
                     ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="10"
+                    sm="10"
+                  >
+                    <v-text-field
+                      v-model="newOption"
+                      label="Adicionar opção de resposta"
+                      hide-details
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="2"
+                    sm="2"
+                  >
+                    <v-btn
+                      fab
+                      dark
+                      small
+                      color="primary"
+                      @click="addNewOption()"
+                    >
+                      <v-icon dark>
+                        mdi-plus
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="12"
+                  >
+                    <v-radio-group v-model="editedItem.answer">
+                      <v-radio
+                        v-for="(option, index) in editedItem.options"
+                        :key="index"
+                        :label="option"
+                        :value="index"
+                      ></v-radio>
+                    </v-radio-group>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="12"
+                  >
+                    <v-textarea
+                      v-model="editedItem.observation"
+                      multi-line
+                      label="Observações (sobre a resposta correta)"
+                    ></v-textarea>
                   </v-col>
                 </v-row>
               </v-container>
@@ -93,6 +155,9 @@
         </v-dialog>
       </v-toolbar>
     </template>
+    <template #[`item.theme`]="{ item }">
+      {{ getThemeNameFromId(item.theme) }}
+    </template>
     <template #[`item.actions`]="{ item }">
       <v-icon
         small
@@ -114,7 +179,7 @@
           color="error"
           dark
         >
-          Sem temas cadastrados :(
+          Sem questões cadastradas :(
         </v-alert>
       </v-flex>
     </template>
@@ -123,6 +188,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { isEmpty, isNil } from 'ramda'
 
 export default {
   data: () => ({
@@ -131,30 +197,52 @@ export default {
     items: [],
     headers: [
       {
-        text: 'Nome',
+        text: 'Tema',
         align: 'start',
         sortable: true,
-        value: 'name',
+        value: 'theme',
       },
-      { text: 'Descrição', value: 'description', sortable: false },
+      {
+        text: 'Peso',
+        align: 'start',
+        sortable: true,
+        value: 'weight',
+      },
+      {
+        text: 'Questão',
+        align: 'start',
+        sortable: true,
+        value: 'title',
+      },
       { text: 'Ações', value: 'actions', sortable: false },
     ],
+    weights: [1, 2, 3, 4, 5],
     editedId: -1,
     editedItem: {
-      text: '',
-      value: '',
+      theme: null,
+      weight: 1,
+      title: '',
+      options: [],
+      answer: 0,
+      observation: '',
     },
+    newOption: '',
     defaultItem: {
-      text: '',
-      value: '',
+      theme: null,
+      weight: 1,
+      title: '',
+      options: [],
+      answer: 0,
+      observation: '',
     },
   }),
   computed: {
     ...mapGetters({
       themes: 'themes/themes',
+      questions: 'questions/questions',
     }),
     formTitle () {
-      return this.editedId === -1 ? 'Novo Tema' : 'Editar Tema'
+      return this.editedId === -1 ? 'Nova Questão' : 'Editar Questão'
     },
   },
   watch: {
@@ -170,13 +258,23 @@ export default {
   },
   methods: {
     ...mapActions({
-      addTheme: 'themes/addTheme',
-      editTheme: 'themes/editTheme',
-      deleteTheme: 'themes/deleteTheme',
+      addQuestion: 'questions/addQuestion',
+      editQuestion: 'questions/editQuestion',
+      deleteQuestion: 'questions/deleteQuestion',
     }),
+    getThemeNameFromId (id) {
+      return this.themes.find(theme => theme.id === id).name
+    },
+    addNewOption () {
+      if (isNil(this.newOption) || isEmpty(this.newOption)) {
+        return
+      }
+      this.editedItem.options.push(this.newOption)
+      this.newOption = ''
+    },
     updateItems () {
       this.items.splice(0, this.items.length)
-      this.items.push(...this.themes)
+      this.items.push(...this.questions)
     },
     editItem (item) {
       this.editedId = item.id
@@ -189,7 +287,7 @@ export default {
       this.dialogDelete = true
     },
     deleteItemConfirm () {
-      this.deleteTheme(this.editedId)
+      this.deleteQuestion(this.editedId)
       this.updateItems()
       this.closeDelete()
     },
@@ -209,9 +307,9 @@ export default {
     },
     save () {
       if (this.editedId !== -1) {
-        this.editTheme(this.editedItem)
+        this.editQuestion(this.editedItem)
       } else {
-        this.addTheme(this.editedItem)
+        this.addQuestion(this.editedItem)
       }
       this.updateItems()
       this.close()
