@@ -47,6 +47,7 @@ export default {
     exams: () => import('../components/exams.vue'),
     themeConfig: () => import('../components/themeConfig.vue'),
     questionConfig: () => import('../components/questionConfig.vue'),
+    examConfig: () => import('../components/examConfig.vue'),
   },
   data() {
     return {
@@ -74,7 +75,7 @@ export default {
           name: 'exam-config',
           label: 'Configuração de Provas',
           admin: true,
-          componentName: 'exams',
+          componentName: 'examConfig',
         },
       ],
     }
