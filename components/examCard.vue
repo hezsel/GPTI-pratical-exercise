@@ -9,7 +9,7 @@
     <v-list-item three-line>
       <v-list-item-content>
         <div class="text-overline mb-4">
-          {{ exam.theme }}
+          {{ getThemeNameFromId(exam.theme) }}
         </div>
         <v-list-item-title class="text-h5 mb-1">
           {{ exam.name }}
@@ -40,7 +40,9 @@
 </template>
 
 <script>
-import { propEq, isNil } from 'ramda'
+import { mapGetters } from 'vuex'
+import { isBefore, isAfter } from 'date-fns'
+import { propEq } from 'ramda'
 
 export default {
   props: {
@@ -62,11 +64,20 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      themes: 'themes/themes',
+    }),
     hasUserFinishedExam() {
-      return !isNil(this.exam.usersResponses.find(propEq('userId', this.user.id)))
+      return this.verifyIfUserHasFinishedExam()
     },
-    disabled() {
-      return this.exam.status !== 'open' || this.hasUserFinishedExam
+    disabled(exam) {
+      if (isBefore(new Date(), new Date(`${exam.startDate} ${exam.startTime}`))) {
+        return true
+      }
+      if (isAfter(new Date(), new Date(`${exam.endDate} ${exam.endTime}`))) {
+        return true
+      }
+      return this.hasUserFinishedExam
     },
     buttonMessage() {
       if (this.hasUserFinishedExam) {
@@ -87,6 +98,14 @@ export default {
       }
 
       return 'primary'
+    },
+  },
+  methods: {
+    verifyIfUserHasFinishedExam () {
+      return this.exam.usersResponses.find(propEq('userId', this.user.id))
+    },
+    getThemeNameFromId (id) {
+      return this.themes.find(theme => theme.id === id).name
     },
   },
 }

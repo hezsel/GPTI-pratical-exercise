@@ -33,7 +33,7 @@ const defaultUsers = [
 
 export const state = () => ({
   registeredUsers: defaultUsers,
-  user: defaultUsers[1],
+  user: defaultUsers[0],
   professorsCode: [
     'pro1',
     'pro2',

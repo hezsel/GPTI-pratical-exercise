@@ -52,10 +52,6 @@ export const state = () => ({
 
 export const getters = {
   exams: (state) => reverse(state.exams),
-  hasUserFinishedExam: (state, { examId, userId }) => {
-    const exam = state.exams.find(propEq('id', examId))
-    return exam.usersResponses.find(propEq('userId', userId))
-  },
 }
 
 export const mutations = {
@@ -88,6 +84,6 @@ export const actions = {
   },
   editExam({ commit }, exam) {
     commit('editExam', exam)
-  }
+  },
 }
 
