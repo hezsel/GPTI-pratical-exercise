@@ -46,6 +46,7 @@ export default {
   components: {
     exams: () => import('../components/exams.vue'),
     themeConfig: () => import('../components/themeConfig.vue'),
+    questionConfig: () => import('../components/questionConfig.vue'),
   },
   data() {
     return {
@@ -67,7 +68,7 @@ export default {
           name: 'question-config',
           label: 'Configuração de Questões',
           admin: true,
-          componentName: 'exams',
+          componentName: 'questionConfig',
         },
         {
           name: 'exam-config',
