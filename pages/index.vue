@@ -59,7 +59,6 @@
           </v-flex>
         </v-card-text>
         <v-card-actions>
-          <v-spacer />
           <v-btn
             color="primary"
             @click="loginUser(credentials)"
@@ -110,8 +109,8 @@ export default {
       try {
         await this.login(credentials)
         this.cleanFields()
-      } catch (err) {
-        alert(err.message)
+      } catch (error) {
+        alert(error.message)
       }
     },
   },

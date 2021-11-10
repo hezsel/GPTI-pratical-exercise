@@ -9,7 +9,7 @@
     >
       <v-list>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in filteredItems"
           :key="i"
           :to="item.to"
           router
@@ -59,6 +59,9 @@ import {
   mapGetters,
   mapActions,
 } from 'vuex'
+import {
+  filter
+} from 'ramda'
 
 export default {
   data () {
@@ -69,18 +72,21 @@ export default {
       items: [
         {
           icon: 'mdi-home',
-          title: 'Inicio',
-          to: '/'
+          title: 'Início',
+          to: '/',
+          type: '',
         },
         {
           icon: 'mdi-ballot',
           title: 'Provas',
-          to: '/provas'
+          to: '/provas',
+          type: '',
         },
         {
           icon: 'mdi-cog',
           title: 'Configurações',
-          to: '/configuracoes'
+          to: '/configuracoes',
+          type: 'admin',
         }
       ],
       miniVariant: false,
@@ -90,7 +96,21 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
+      user: 'user/getUser',
     }),
+    filteredItems() {
+      const isAdmin = this.user?.type === 'admin'
+
+      if (!this.isLoggedIn) {
+        return [this.items[0]]
+      }
+      if (isAdmin) {
+        return this.items
+      }
+
+      const filteredItems = filter((item) => item.type !== 'admin', this.items)
+      return filteredItems
+    },
   },
   methods: {
     ...mapActions({

@@ -4,7 +4,17 @@ import cuid from 'cuid'
 const defaultThemes = [
   {
     id: '1',
-    name: 'Tema 1',
+    name: 'Banco de dados',
+    description: 'tema para provas',
+  },
+  {
+    id: '2',
+    name: 'Organização de computadores digitais',
+    description: 'tema para provas',
+  },
+  {
+    id: '3',
+    name: 'Gestão de projetos',
     description: 'tema para provas',
   },
 ]
