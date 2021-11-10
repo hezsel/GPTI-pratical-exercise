@@ -6,5 +6,13 @@ export default {
   wrongCredentials: {
     label: 'Credenciais inválidas.',
     value: 'wrongCredentials',
+  },
+  usernameInvalid: {
+    label: 'Username já está sendo utilizado',
+    value: 'usernameAlreadyExists',
+  },
+  professorCodeInvalid: {
+    label: 'Código de professor inválido',
+    value: 'professorCodeNotExist',
   }
 }
