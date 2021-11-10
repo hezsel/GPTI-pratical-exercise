@@ -1,11 +1,5 @@
 <template>
-  <v-card
-    class="mx-auto"
-    outlined
-    shaped
-    :color="examColor"
-    :max-width="width"
-  >
+  <v-card class="mx-auto" outlined shaped :color="examColor" :max-width="width">
     <v-list-item three-line>
       <v-list-item-content>
         <div class="text-overline mb-4">
@@ -28,12 +22,7 @@
       >
         Verificar resultados
       </v-btn>
-      <v-btn
-        outlined
-        rounded
-        text
-        :disabled="disabled"
-      >
+      <v-btn outlined rounded text :disabled="disabled" @click="openDialog">
         {{ buttonMessage }}
       </v-btn>
     </v-card-actions>
@@ -43,13 +32,50 @@
     >
       <exam-results :exam="exam" :user="user" />
     </v-dialog>
+
+    <v-dialog v-model="showExamDialog" width="1000">
+      <v-card>
+        <v-card-title class="mt-4">
+          {{ this.exam.name }}
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <div
+              class="mb-5"
+              v-for="question in userResponse.questions"
+              :key="question.id"
+            >
+              <h2>- {{ question.question.title }}</h2>
+              <v-radio-group v-model="question.answer">
+                <v-radio
+                  class="ml-4"
+                  v-for="(option, index) in question.question.options"
+                  :key="option"
+                  :label="option"
+                  :value="index"
+                />
+              </v-radio-group>
+            </div>
+            <v-row>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                @click="sendUserResponse"
+              >
+                ENVIAR RESPOSTAS
+              </v-btn>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { isBefore, isAfter } from 'date-fns'
-import { propEq } from 'ramda'
+import { propEq, clone, find } from 'ramda'
 
 export default {
   components: {
@@ -72,17 +98,26 @@ export default {
   data() {
     return {
       examResultDialog: false,
+      showExamDialog: false,
+      userResponse: {
+        userId: this.user.id,
+        questions: [],
+      },
     }
   },
   computed: {
     ...mapGetters({
       themes: 'themes/themes',
+      questions: 'questions/questions',
+      exams: 'exam/exams',
     }),
     hasUserFinishedExam() {
       return this.verifyIfUserHasFinishedExam()
     },
     disabled(exam) {
-      if (isBefore(new Date(), new Date(`${exam.startDate} ${exam.startTime}`))) {
+      if (
+        isBefore(new Date(), new Date(`${exam.startDate} ${exam.startTime}`))
+      ) {
         return true
       }
       if (isAfter(new Date(), new Date(`${exam.endDate} ${exam.endTime}`))) {
@@ -112,15 +147,56 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      editExam: 'exam/editExam',
+    }),
     showResults() {
       this.examResultDialog = true
     },
     verifyIfUserHasFinishedExam () {
       return this.exam.usersResponses.find(propEq('userId', this.user.id)) !== undefined
     },
-    getThemeNameFromId (id) {
-      return this.themes.find(theme => theme.id === id).name
+    getThemeNameFromId(id) {
+      return this.themes.find((theme) => theme.id === id).name
     },
+    openDialog() {
+      if (this.buttonMessage === 'Fazer') {
+        this.createRandomExam()
+        this.showExamDialog = true
+      }
+    },
+    createRandomExam() {
+      this.userResponse = {
+        userId: this.user.id,
+        questions: [],
+      }
+
+      const shuffledQuestions = clone(this.exam.questions).sort(
+        () => 0.5 - Math.random()
+      )
+
+      const selectedQuestions = shuffledQuestions.slice(
+        0,
+        this.exam.numberOfQuestions
+      )
+
+      selectedQuestions.forEach((questionId) => {
+        const question = {
+          question: {},
+          answer: null,
+        }
+
+        question.question = find(propEq('id', questionId))(this.questions)
+
+        this.userResponse.questions.push(question)
+      })
+    },
+    sendUserResponse() {
+      const exam = clone(this.exam)
+      exam.usersResponses.push(this.userResponse)
+      this.editExam(exam)
+      this.showExamDialog = false
+    }
   },
 }
 </script>

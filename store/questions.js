@@ -17,6 +17,36 @@ const defaultQuestions = [
     answer: 3,
     observation: 'Realmente depende mesmo',
   },
+  {
+    id: '2',
+    theme: '1',
+    weight: 1,
+    title: 'asdasdasdasd',
+    options: [
+      'mais de 10',
+      '2',
+      '5.5',
+      'depende do tamanho dos paus',
+      'nenhum, você compra',
+    ],
+    answer: 3,
+    observation: 'Realmente depende mesmo',
+  },
+  {
+    id: '3',
+    theme: '1',
+    weight: 1,
+    title: 'Casdsad asd a adads a auma canoa',
+    options: [
+      'mais de 10',
+      '2',
+      '5.5',
+      'depende do tamanho dos paus',
+      'nenhum, você compra',
+    ],
+    answer: 3,
+    observation: 'Realmente depende mesmo',
+  },
 ]
 
 export const state = () => ({
