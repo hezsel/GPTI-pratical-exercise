@@ -52,13 +52,23 @@
                     ></v-select>
                   </v-col>
                   <v-col
-                    cols="12"
-                    sm="12"
+                    cols="9"
+                    sm="9"
                   >
                     <v-text-field
                       v-model="editedItem.name"
                       label="Nome"
                     ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="3"
+                    sm="3"
+                  >
+                    <v-select
+                      v-model="editedItem.numberOfQuestions"
+                      :items="numberOfQuestions"
+                      label="N de Questões"
+                    ></v-select>
                   </v-col>
                   <v-col
                     cols="6"
@@ -222,12 +232,14 @@ export default {
       { text: 'Data Fim', value: 'endDate', sortable: true },
       { text: 'Ações', value: 'actions', sortable: false },
     ],
+    numberOfQuestions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     editedId: -1,
     editedItem: {
       theme: null,
       name: '',
       startDate: '',
       endDate: '',
+      numberOfQuestions: 1,
       questions: [],
     },
     defaultItem: {
@@ -235,6 +247,7 @@ export default {
       name: '',
       startDate: '',
       endDate: '',
+      numberOfQuestions: 1,
       questions: [],
     },
   }),
