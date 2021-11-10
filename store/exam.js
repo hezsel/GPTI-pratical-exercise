@@ -76,6 +76,7 @@ export const actions = {
   addExam({ commit }, exam) {
     commit('addExam', {
       ...exam,
+      usersResponses: [],
       id: cuid(),
     })
   },
