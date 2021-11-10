@@ -24,6 +24,7 @@
         outlined
         rounded
         text
+        @click="showResults()"
       >
         Verificar resultados
       </v-btn>
@@ -36,6 +37,12 @@
         {{ buttonMessage }}
       </v-btn>
     </v-card-actions>
+    <v-dialog
+      v-model="examResultDialog"
+      max-width="1000px"
+    >
+      <exam-results :exam="exam" :user="user" />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -45,6 +52,9 @@ import { isBefore, isAfter } from 'date-fns'
 import { propEq } from 'ramda'
 
 export default {
+  components: {
+    examResults: () => import('../components/examResults.vue')
+  },
   props: {
     exam: {
       type: Object,
@@ -61,6 +71,7 @@ export default {
   },
   data() {
     return {
+      examResultDialog: false,
     }
   },
   computed: {
@@ -101,8 +112,11 @@ export default {
     },
   },
   methods: {
+    showResults() {
+      this.examResultDialog = true
+    },
     verifyIfUserHasFinishedExam () {
-      return this.exam.usersResponses.find(propEq('userId', this.user.id))
+      return this.exam.usersResponses.find(propEq('userId', this.user.id)) !== undefined
     },
     getThemeNameFromId (id) {
       return this.themes.find(theme => theme.id === id).name
