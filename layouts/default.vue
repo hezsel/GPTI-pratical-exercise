@@ -41,7 +41,7 @@
       <v-btn
         v-if="isLoggedIn"
         icon
-        @click="logout()"
+        @click="logoutUser()"
       >
         <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
@@ -115,7 +115,11 @@ export default {
   methods: {
     ...mapActions({
       logout: 'user/logout',
-    })
+    }),
+    logoutUser() {
+      this.logout()
+      this.$router.push('/')
+    },
   },
 }
 </script>
