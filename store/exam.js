@@ -34,7 +34,7 @@ const defaultExams = [
         questions: [
           {
             question: {
-              id: '2',
+              id: '1',
               theme: '1',
               weight: 1,
               title: 'Com quantos paus se faz uma canoa',
@@ -64,8 +64,8 @@ const defaultExams = [
     startTime: '07:00',
     endDate: '2021-11-20',
     endTime: '19:00',
-    numberOfQuestions: 1,
-    questions: [],
+    numberOfQuestions: 10,
+    questions: ['1', '2', '3'],
     usersResponses: [],
   },
 ]

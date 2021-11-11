@@ -72,7 +72,7 @@ export default {
           points += question.weight
         }
       }
-      return (points / weights) * 10
+      return Number((points / weights) * 10).toFixed(2)
     },
     userAnswers() {
       return this.exam.usersResponses.find(propEq('userId', this.user.id))
