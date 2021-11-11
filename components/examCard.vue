@@ -33,24 +33,28 @@
       <exam-results :exam="exam" :user="user" />
     </v-dialog>
 
-    <v-dialog v-model="showExamDialog" width="1000">
+    <v-dialog
+      v-model="showExamDialog"
+      width="1000"
+      persistent
+    >
       <v-card>
         <v-card-title class="mt-4">
-          {{ this.exam.name }}
+          {{ exam.name }}
         </v-card-title>
         <v-card-text>
           <v-container>
             <div
-              class="mb-5"
               v-for="question in userResponse.questions"
               :key="question.id"
+              class="mb-5"
             >
               <h2>- {{ question.question.title }}</h2>
               <v-radio-group v-model="question.answer">
                 <v-radio
-                  class="ml-4"
                   v-for="(option, index) in question.question.options"
                   :key="option"
+                  class="ml-4"
                   :label="option"
                   :value="index"
                 />
@@ -140,7 +144,7 @@ export default {
         return 'green'
       }
       if (this.exam.status === 'closed') {
-        return 'error'
+        return 'red'
       }
 
       return 'primary'
